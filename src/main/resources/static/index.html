@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Analysis</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery for AJAX -->
+</head>
+<body>
+<div class="container">
+    <h1>Sentiment Analysis</h1>
+    <form id="sentiment-form">
+        <label for="text">Enter text for analysis:</label>
+        <textarea id="text" name="text" rows="4" cols="50" required></textarea><br>
+        <button type="submit">Analyze</button>
+    </form>
+    <div id="result" style="margin-top: 20px; display: none;">
+        <h3>Sentiment Result:</h3>
+        <p><strong>Text:</strong> <span id="input-text"></span></p>
+        <p><strong>Sentiment:</strong> <span id="sentiment"></span></p>
+    </div>
+</div>
+
+<script>
+    // Handle form submission via AJAX
+    $("#sentiment-form").on("submit", function(e) {
+        e.preventDefault();  // Prevent the form from submitting normally
+
+        // Get the text from the textarea
+        const text = $("#text").val();
+
+        // Make the AJAX request
+        $.ajax({
+            url: "http://localhost:8080/api/sentiment",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({ text: text }), // Send text as JSON body
+            success: function(response) {
+                // Display the result in the UI
+                $("#input-text").text(text);
+                $("#sentiment").text(response);
+                $("#result").show();  // Show the result div
+            },
+            error: function(error) {
+                alert("Error analyzing sentiment");
+            }
+        });
+    });
+</script>
+</body>
+</html>
